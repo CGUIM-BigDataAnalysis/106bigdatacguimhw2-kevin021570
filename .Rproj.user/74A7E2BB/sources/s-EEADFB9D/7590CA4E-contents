@@ -1,0 +1,108 @@
+library(readr)
+library(dplyr)
+data103<- read_csv("C:/Users/KEVIN/Downloads/25f64d5125016dcd6aed42e50c972ed0_export (1).csv")
+data104<- read_csv("C:/Users/KEVIN/Downloads/19bedf88cf46999da12513de755c33c6_export.csv")
+data105<- read_csv("C:/Users/KEVIN/Downloads/4d3e9b37b7b0fd3aa18a388cdbc77996_export.csv")
+data106<- read_csv("C:/Users/KEVIN/Downloads/50e3370f9f8794f2054c0c82a2ed8c91_export.csv")
+new <- read_csv("C:/Users/KEVIN/Downloads/new.csv")
+
+
+
+col<-colnames(data105)
+col<-gsub("-","_",col)
+colnames(data105)<-col
+colnames(data103)<-col
+data108<-rbind(data103,data104,data105,data106)
+data108<-mutate(data108,total=學位生_正式修讀學位外國生+
+                  `學位生_僑生(含港澳)`+
+                  學位生_正式修讀學位陸生+
+                  非學位生_外國交換生+
+                  非學位生_外國短期研習及個人選讀+
+                  非學位生_大專附設華語文中心學生+
+                  非學位生_大陸研修生+
+                  非學位生_海青班+
+                  境外專班)
+data108<-group_by(data108,國別)
+data108<-summarise(data108,total=sum(total))
+data108<-arrange(data108,desc(total))
+data108<-select(data108,"國別",total)
+head(data108,10)
+
+
+library(readr)
+library(dplyr)
+
+school106 <- read_csv("C:/Users/KEVIN/Downloads/1a485383cf9995da679c3798ab4fd681_export (1).csv")
+school105 <- read_csv("C:/Users/KEVIN/Downloads/8baeae81cba74f35cf0bb1333d3d99f5_export (1).csv")
+school104 <- read_csv("C:/Users/KEVIN/Downloads/883e2ab4d5357f70bea9ac44a47d05cc_export (1).csv")
+school103 <- read_csv("C:/Users/KEVIN/Downloads/a6d1469f39fe41fb81dbfc373aef3331_export (1).csv")
+
+new103<-colnames(school103)
+
+new103<-gsub("-","_",new103)
+colnames(school103)<-new103
+colnames(school105)<-new103
+
+finalschool<-rbind(school103,school104,school105,school106)
+finalschool$非學位生_大陸研修生<-gsub("…","0",finalschool$非學位生_大陸研修生)
+finalschool$非學位生_大陸研修生<-as.numeric(finalschool$非學位生_大陸研修生)
+finalschool<-mutate(finalschool,total=學位生_正式修讀學位外國生+     
+                      `學位生_僑生(含港澳)`+學位生_正式修讀學位陸生+        
+                      非學位生_外國交換生+非學位生_外國短期研習及個人選讀+
+                      非學位生_大專附設華語文中心學生+非學位生_大陸研修生+          
+                      非學位生_海青班+ 境外專班)
+finalschool1<-group_by(finalschool,學校名稱)%>%
+  summarise(total=sum(total))%>%
+  arrange(desc(total))
+finalschool1[2:11,]
+
+install.packages("ggplot2")
+library(ggplot2)
+ggplot()+geom_bar(data=data108,
+                  aes(x=國別,y=total),
+                  stat = "identity") 
+world<-read_csv("https://ws.moe.edu.tw/Download.ashx?u=C099358C81D4876CC7586B178A6BD6D5062C39FB76BDE7EC7685C1A3C0846BCDD2B4F4C2FE907C3E7E96F97D24487065577A728C59D4D9A4ECDFF432EA5A114C8B01E4AFECC637696DE4DAECA03BB417&n=4E402A02CE6F0B6C1B3C7E89FDA1FAD0B5DDFA6F3DA74E2DA06AE927F09433CFBC07A1910C169A1845D8EB78BD7D60D7414F74617F2A6B71DC86D17C9DA3781394EF5794EEA7363C&icon=..csv")
+world<-arrange(world,desc(總人數))
+world$X4<-NULL
+world$X5<-NULL
+world$X6<-NULL
+head(world,10)
+
+
+
+Student_RPT_07 <- read_csv("C:/Users/KEVIN/Desktop/Student_RPT_07.csv", 
+                           skip = 2)
+
+Student_RPT_07$X10<-gsub("共和國","",Student_RPT_07$X10)
+Student_RPT_07$X10<-gsub("王國","",Student_RPT_07$X10)
+Student_RPT_07$X10<-gsub("聯邦","",Student_RPT_07$X10)
+Student_RPT_07$X10<-gsub("民主","",Student_RPT_07$X10)
+Student_RPT_07$X10<-gsub("意志","國",Student_RPT_07$X10)
+Student_RPT_07$X10<-gsub("合眾國","",Student_RPT_07$X10)
+Student_RPT_07$X10<-gsub("社會主義","",Student_RPT_07$X10)
+Student_RPT_07$X10<-gsub("和平之國","",Student_RPT_07$X10)
+Student_RPT_07$X10<-gsub("侯國","",Student_RPT_07$X10)
+Student_RPT_07$X10<-gsub("印度尼西亞","印尼",Student_RPT_07$X10)
+Student_RPT_07$X10<-gsub("大陸地區","中國大陸",Student_RPT_07$X10)
+Student_RPT_07$X10<-gsub("哈什米","",Student_RPT_07$X10)
+Student_RPT_07$X10<-gsub("阿拉伯","",Student_RPT_07$X10)
+Student_RPT_07$X10<-gsub("蒙古國","蒙古",Student_RPT_07$X10)
+
+Cdata<-group_by(Student,X10)%>%
+  summarise(sumC=sum(小計))
+Cdata<-arrange(Cdata,desc(sumC))
+head(Cdata,10) 
+
+
+Sdata<-group_by(Student,學校名稱)%>%
+  summarise(sumC=sum(小計))
+Sdata<-arrange(Sdata,desc(sumC))
+head(Sdata,10)
+
+ggplot()+geom_bar(data=Cdata,
+                  aes(x=人數,y=sumC),
+                  stat = "identity")
+colnames(Cdata)[1]<-"國別"
+colnames(Cdata)[2]<-"人數"
+
+colnames(Sdata)[2]<-"人數"
